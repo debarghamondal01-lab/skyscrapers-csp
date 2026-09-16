@@ -50,6 +50,11 @@ skyscrapers-csp/
 ├── style.css # Styling
 └── script.js # Game logic
 
+## 🌐 Live Demo
+
+**🎮 Play the game online:** https://skyscrapers-csp.onrender.com/
+> ⚠️ **Note:** The free Render tier sleeps after 15 minutes of inactivity. The first visit will take 30-60 seconds to wake up the server. Subsequent visits are instant.
+
 ## ⚙️ How to Run Locally
 
 1. Clone the repository: git clone https://github.com/YOUR_USERNAME/skyscrapers-csp.git
