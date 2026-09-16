@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyscrapers — CSP Edition 🏙️</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>🏙️ Skyscrapers</h1>
+            <p class="subtitle">A Constraint Satisfaction Puzzle</p>
+        </header>
+
+        <div class="toolbar">
+            <select id="difficulty">
+                <option value="easy">Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+            <select id="gridSize">
+                <option value="4" selected>4 × 4</option>
+                <option value="5">5 × 5</option>
+                <option value="6">6 × 6</option>
+            </select>
+            <button id="newGame" class="btn primary">🎮 New Game</button>
+            <button id="hintBtn" class="btn">💡 Hint</button>
+            <button id="solveBtn" class="btn">🤖 Solve (CSP)</button>
+            <button id="solveAC3Btn" class="btn">⚡ Solve (AC-3)</button>
+            <button id="validateBtn" class="btn">✓ Validate</button>
+        </div>
+        <div id="message" class="message">Welcome! Click "New Game" to begin.</div>
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="label">Time</span>
+                <span id="timer" class="value">00:00</span>
+            </div>
+            <div class="stat">
+                <span class="label">Mistakes</span>
+                <span id="mistakes" class="value">0</span>
+            </div>
+            <div class="stat">
+                <span class="label">Algorithm</span>
+                <span id="algoUsed" class="value">—</span>
+            </div>
+            <div class="stat">
+                <span class="label">Nodes</span>
+                <span id="nodesExplored" class="value">—</span>
+            </div>
+        </div>
+        
+        <div class="game-wrapper">
+            <div id="boardContainer" class="board-container"></div>
+            <div class="legend" id="legend"></div>
+            <div class="number-pad" id="numberPad"></div>
+        </div>
+<div class="info-panels">
+    <div class="info-card">
+        <h3>📖 How to Play</h3>
+        <ul>
+            <li>Fill the grid so every <strong>row</strong> and <strong>column</strong> contains each number exactly once.</li>
+            <li>The numbers on the edges tell you how many buildings you can see from that direction.</li>
+            <li>A taller building <strong>hides</strong> shorter ones behind it.</li>
+            <li>Click a cell, then click a number to place a building.</li>
+        </ul>
+    </div>
+    <div class="info-card">
+        <h3>🧠 CSP Algorithms</h3>
+        <ul>
+            <li><strong>Backtracking</strong> — core recursive search</li>
+            <li><strong>Forward Checking</strong> — prunes impossible values</li>
+            <li><strong>MRV</strong> — picks the most-constrained cell first</li>
+            <li><strong>Degree Heuristic</strong> — tie-breaker for MRV</li>
+            <li><strong>LCV</strong> — tries least-constraining values first</li>
+            <li><strong>AC-3</strong> — arc consistency preprocessing</li>
+        </ul>
+    </div>
+    <div class="info-card">
+        <h3>🎯 Try This Demo</h3>
+        <ol>
+            <li>Click <strong>New Game</strong></li>
+            <li>Click <strong>🤖 Solve (CSP)</strong> — note "Nodes" number</li>
+            <li>Click <strong>New Game</strong> again</li>
+            <li>Click <strong>⚡ Solve (AC-3)</strong> — compare "Nodes"</li>
+        </ol>
+        <p class="demo-note">AC-3 explores fewer nodes → proves the optimization!</p>
+    </div>
+</div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
