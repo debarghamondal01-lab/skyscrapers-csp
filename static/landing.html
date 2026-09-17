@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyscrapers — Home</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container landing-container">
+        <header class="app-header">
+            <h1>🏙️ Skyscrapers</h1>
+            <p class="subtitle">A Constraint Satisfaction Puzzle</p>
+        </header>
+
+        <div class="landing-section">
+            <h3 class="landing-label">🎯 Difficulty</h3>
+            <div class="chip-group" id="difficultyGroup">
+                <button class="chip" data-value="easy">Easy</button>
+                <button class="chip active" data-value="medium">Medium</button>
+                <button class="chip" data-value="hard">Hard</button>
+            </div>
+        </div>
+
+        <div class="landing-section">
+            <h3 class="landing-label">📐 Grid Size</h3>
+            <div class="chip-group" id="gridGroup">
+                <button class="chip active" data-value="4">4 × 4</button>
+                <button class="chip" data-value="5">5 × 5</button>
+                <button class="chip" data-value="6">6 × 6</button>
+            </div>
+        </div>
+
+        <div class="landing-actions">
+            <button id="aboutBtn" class="btn large">ℹ️ About</button>
+            <button id="playBtn" class="btn primary large">▶️ Play</button>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>ℹ️ About Skyscrapers</h2>
+                <button class="modal-close" id="closeAbout">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>📖 How to Play</h3>
+                <ul>
+                    <li>Fill the grid so every <strong>row</strong> and <strong>column</strong> contains each number exactly once.</li>
+                    <li>The numbers on the edges tell you how many buildings you can see from that direction.</li>
+                    <li>A taller building <strong>hides</strong> shorter ones behind it.</li>
+                    <li>Click a cell, then click a number to place a building.</li>
+                </ul>
+
+                <h3>🧠 CSP Algorithms Used</h3>
+                <ul>
+                    <li><strong>Backtracking Search</strong> — core recursive search</li>
+                    <li><strong>Forward Checking</strong> — prunes impossible values</li>
+                    <li><strong>MRV</strong> — picks the most-constrained cell first</li>
+                    <li><strong>Degree Heuristic</strong> — tie-breaker for MRV</li>
+                    <li><strong>LCV</strong> — tries least-constraining values first</li>
+                    <li><strong>AC-3</strong> — arc consistency preprocessing</li>
+                </ul>
+
+                <h3>🎯 Try This Demo</h3>
+                <ol>
+                    <li>Play a puzzle.</li>
+                    <li>Click <strong>🤖 Solve (CSP)</strong> — note the "Nodes" value.</li>
+                    <li>Click <strong>🏠 Home</strong>, then start a new game.</li>
+                    <li>Click <strong>⚡ Solve (AC-3)</strong> — compare "Nodes".</li>
+                    <li>AC-3 explores fewer nodes → proves the optimization!</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDifficulty = 'medium';
+        let selectedGrid = 4;
+
+        // Chip selection — difficulty
+        document.querySelectorAll('#difficultyGroup .chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#difficultyGroup .chip').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedDifficulty = btn.dataset.value;
+            });
+        });
+
+        // Chip selection — grid
+        document.querySelectorAll('#gridGroup .chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('#gridGroup .chip').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedGrid = parseInt(btn.dataset.value);
+            });
+        });
+
+        // Play button
+        document.getElementById('playBtn').addEventListener('click', () => {
+            window.location.href = `/game?n=${selectedGrid}&difficulty=${selectedDifficulty}`;
+        });
+
+        // About modal
+        const modal = document.getElementById('aboutModal');
+        document.getElementById('aboutBtn').addEventListener('click', () => {
+            modal.classList.add('visible');
+        });
+        document.getElementById('closeAbout').addEventListener('click', () => {
+            modal.classList.remove('visible');
+        });
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.remove('visible');
+        });
+    </script>
+</body>
+</html>
