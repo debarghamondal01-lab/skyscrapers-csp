@@ -1,9 +1,10 @@
 # generator.py
 # Skyscrapers Puzzle Generator
-# Creates random valid puzzles with unique solutions
 
 import random
 from csp_solver import SkyscrapersCSP
+
+
 def _count_visible(line):
     """Count buildings visible from the start of a line."""
     count = 0
@@ -13,29 +14,22 @@ def _count_visible(line):
             count += 1
             max_seen = h
     return count
+
+
 def _generate_latin_square(n):
-    """
-    Generate a random n x n Latin square.
-    Each row and column contains 1..n exactly once.
-    """
-    # Start with a base pattern
+    """Generate a random n x n Latin square."""
     base = [[((i + j) % n) + 1 for j in range(n)] for i in range(n)]
-
-    # Randomly shuffle rows
     random.shuffle(base)
-
-    # Randomly shuffle columns
     cols = list(range(n))
     random.shuffle(cols)
     base = [[row[c] for c in cols] for row in base]
-
-    # Randomly relabel the numbers (1..n -> random permutation)
     symbols = list(range(1, n + 1))
     random.shuffle(symbols)
     mapping = {i + 1: symbols[i] for i in range(n)}
     base = [[mapping[cell] for cell in row] for row in base]
-
     return base
+
+
 def compute_clues(solution):
     """Given a solved grid, calculate all 4 edge clues."""
     n = len(solution)
@@ -45,19 +39,19 @@ def compute_clues(solution):
         'left':   [0] * n,
         'right':  [0] * n
     }
-    # Column clues (top and bottom)
     for c in range(n):
         col = [solution[r][c] for r in range(n)]
         clues['top'][c] = _count_visible(col)
         clues['bottom'][c] = _count_visible(col[::-1])
-    # Row clues (left and right)
     for r in range(n):
         row = solution[r]
         clues['left'][r] = _count_visible(row)
         clues['right'][r] = _count_visible(row[::-1])
     return clues
+
+
 def count_solutions(n, clues, limit=2):
-    """Count how many solutions exist (up to 'limit'). Used to verify uniqueness."""
+    """Count how many solutions exist (up to 'limit')."""
     solver = SkyscrapersCSP(n, clues)
     solutions = []
     domains = {v: set(solver.domains[v]) for v in solver.variables}
@@ -85,10 +79,12 @@ def count_solutions(n, clues, limit=2):
 
     backtrack(assignment, domains)
     return solutions
-def generate_puzzle(n=4, difficulty="medium", max_attempts=5):
+
+
+def generate_puzzle(n=4, difficulty="medium"):
     """
-    Generate a Skyscrapers puzzle. Always verifies solvability before returning.
-    Falls back to a fully-clued puzzle if all attempts fail.
+    Generate a Skyscrapers puzzle. Guaranteed solvable by construction:
+    we start from a valid Latin square and only remove clues from it.
     """
     targets = {
         4: {"easy": 0,  "medium": 8,  "hard": 12},
@@ -97,63 +93,29 @@ def generate_puzzle(n=4, difficulty="medium", max_attempts=5):
     }
     target = targets.get(n, {4: 8, 5: 4, 6: 2})[difficulty]
 
-    for attempt in range(max_attempts):
-        solution = _generate_latin_square(n)
-        clues = compute_clues(solution)
-
-        if target > 0:
-            all_positions = [(side, i) for side in ['top', 'bottom', 'left', 'right'] for i in range(n)]
-            random.shuffle(all_positions)
-            removed = 0
-            for side, i in all_positions:
-                if removed >= target:
-                    break
-                original = clues[side][i]
-                if original == 0:
-                    continue
-                clues[side][i] = 0
-
-                if n <= 5:
-                    if len(count_solutions(n, clues, limit=2)) == 1:
-                        removed += 1
-                    else:
-                        clues[side][i] = original
-                else:
-                    removed += 1
-
-        # FINAL VERIFICATION: Guarantee the puzzle is solvable
-        test_solver = SkyscrapersCSP(n, clues)
-        test_solution = test_solver.solve()
-        if test_solution is not None:
-            return clues, solution
-
-    # Fallback: return a fully-clued puzzle (guaranteed solvable)
     solution = _generate_latin_square(n)
     clues = compute_clues(solution)
+
+    if target > 0:
+        all_positions = [(side, i) for side in ['top', 'bottom', 'left', 'right'] for i in range(n)]
+        random.shuffle(all_positions)
+        removed = 0
+        for side, i in all_positions:
+            if removed >= target:
+                break
+            if clues[side][i] == 0:
+                continue
+            original = clues[side][i]
+            clues[side][i] = 0
+
+            # For 4×4 and 5×5, verify uniqueness (fast)
+            if n <= 5:
+                if len(count_solutions(n, clues, limit=2)) == 1:
+                    removed += 1
+                else:
+                    clues[side][i] = original
+            else:
+                # For 6×6, skip uniqueness check (fast path)
+                removed += 1
+
     return clues, solution
-if __name__ == "__main__":
-    import time
-
-    print("Generating a Medium 4x4 puzzle...")
-    start = time.time()
-    clues, solution = generate_puzzle(4, "medium")
-    elapsed = round(time.time() - start, 2)
-    print(f"Generated in {elapsed} seconds.\n")
-
-    print("CLUES:")
-    print("Top:    ", clues['top'])
-    print("Bottom: ", clues['bottom'])
-    print("Left:   ", clues['left'])
-    print("Right:  ", clues['right'])
-
-    print("\nSOLUTION:")
-    for row in solution:
-        print(row)
-
-    print("\nVerifying uniqueness...")
-    solutions_found = count_solutions(4, clues, limit=2)
-    print(f"Number of solutions: {len(solutions_found)}")
-    if len(solutions_found) == 1:
-        print("✅ Puzzle is UNIQUE!")
-    else:
-        print("❌ Puzzle has multiple solutions.")
