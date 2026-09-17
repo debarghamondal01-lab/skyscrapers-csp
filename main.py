@@ -76,11 +76,17 @@ def _solve_with_clues(board, clues, use_ac3=False):
     return {"solved": True, "solution": sol, "algorithm_stats": stats}
 
 
-# ---------- Endpoints ----------
+# ---------- Page Routes ----------
 @app.get("/")
 def read_root():
-    return FileResponse("static/index.html")
+    return FileResponse("static/landing.html")
 
+@app.get("/game")
+def read_game():
+    return FileResponse("static/game.html")
+
+
+# ---------- API Endpoints ----------
 @app.get("/generate")
 def generate(n: int = 4, difficulty: str = "medium"):
     start = time.time()
