@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyscrapers — Play</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container game-page-container">
+        <header class="app-header">
+            <h1>🏙️ Skyscrapers</h1>
+            <p class="subtitle">A Constraint Satisfaction Puzzle</p>
+        </header>
+
+        <div id="message" class="message">Welcome! Good luck with the puzzle.</div>
+
+        <div class="game-layout">
+            <!-- LEFT: Controls + Stats -->
+                        <aside class="controls-panel">
+                <div class="panel-section">
+                    <div class="panel-title">🎮 Controls</div>
+                    <button id="homeBtn" class="btn panel-btn">🏠 Home</button>
+                    <button id="hintBtn" class="btn panel-btn">💡 Hint</button>
+                    <button id="solveBtn" class="btn panel-btn">🤖 Solve (CSP)</button>
+                    <button id="solveAC3Btn" class="btn panel-btn">⚡ Solve (AC-3)</button>
+                    <button id="validateBtn" class="btn panel-btn primary">✓ Validate</button>
+                </div>
+
+                <div class="panel-section">
+                    <div class="panel-title">📊 Statistics</div>
+                    <div class="stat-row">
+                        <span class="stat-label">⏱️ Time</span>
+                        <span id="timer" class="stat-value">00:00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">❌ Mistakes</span>
+                        <span id="mistakes" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">🧠 Algorithm</span>
+                        <span id="algoUsed" class="stat-value">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">🔍 Nodes</span>
+                        <span id="nodesExplored" class="stat-value">—</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CENTER: Game Grid -->
+            <div class="board-center">
+                <div id="boardContainer" class="board-container"></div>
+                <div class="legend" id="legend"></div>
+                <div class="number-pad" id="numberPad"></div>
+            </div>
+
+            <!-- RIGHT: How to Play -->
+            <aside class="info-side">
+                <div class="info-card">
+                    <h3>📖 How to Play</h3>
+                    <ul>
+                        <li>Fill the grid so every <strong>row</strong> and <strong>column</strong> contains each number exactly once.</li>
+                        <li>The numbers on the edges tell you how many buildings you can see from that direction.</li>
+                        <li>A taller building <strong>hides</strong> shorter ones behind it.</li>
+                        <li>Click a cell, then click a number to place a building.</li>
+                        <li>Use <strong>💡 Hint</strong> when stuck.</li>
+                        <li>Click <strong>✓ Validate</strong> to check your solution.</li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Win Modal -->
+    <div id="winModal" class="modal-overlay">
+        <div class="modal win-modal">
+            <div class="win-icon">🎉</div>
+            <h2 class="win-title">Congratulations!</h2>
+            <p class="win-subtitle">You solved the puzzle!</p>
+            <div class="win-stats">
+                <div class="win-stat">
+                    <span class="win-stat-label">Time</span>
+                    <span class="win-stat-value" id="winTime">00:00</span>
+                </div>
+                <div class="win-stat">
+                    <span class="win-stat-label">Mistakes</span>
+                    <span class="win-stat-value" id="winMistakes">0</span>
+                </div>
+                <div class="win-stat">
+                    <span class="win-stat-label">Grid</span>
+                    <span class="win-stat-value" id="winGrid">4×4</span>
+                </div>
+            </div>
+            <div class="win-actions">
+                <button id="winNewGame" class="btn primary large">🏠 Back to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
