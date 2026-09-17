@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     padding: 20px;
     color: #fff;
 }
@@ -484,10 +484,887 @@ body {
     .clue { min-width: 34px; min-height: 34px; font-size: 0.85rem; }
 }
 /* ===== Responsive ===== */
+/* ============================================
+   RESPONSIVE — TABLET (640px to 900px)
+   ============================================ */
+@media (max-width: 900px) {
+    .info-panels {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .app-container {
+        padding: 24px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE — MOBILE (< 640px)
+   ============================================ */
 @media (max-width: 640px) {
-    .cell { width: 40px; height: 40px; }
-    .num-btn { width: 42px; height: 42px; font-size: 1rem; }
-    .app-header h1 { font-size: 1.6rem; }
-    .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    .clue { min-width: 32px; min-height: 32px; font-size: 0.85rem; }
+    body {
+        padding: 8px;
+        align-items: flex-start;
+    }
+
+    .app-container {
+        padding: 16px 12px;
+        border-radius: 16px;
+    }
+
+    /* ---- Header ---- */
+    .app-header h1 {
+        font-size: 1.7rem;
+    }
+    .subtitle {
+        font-size: 0.75rem;
+    }
+
+    /* ---- Toolbar: two rows ---- */
+    .toolbar {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        flex-wrap: unset;
+        overflow-x: visible;
+        padding-bottom: 0;
+    }
+
+    .toolbar select {
+        width: 100%;
+        padding: 10px 30px 10px 12px;
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 10px 8px;
+        font-size: 0.75rem;
+        border-radius: 10px;
+        white-space: nowrap;
+        text-align: center;
+        justify-content: center;
+    }
+
+    #newGame {
+        grid-column: span 2;
+    }
+
+    /* ---- Message ---- */
+    .message {
+        font-size: 0.82rem;
+        min-height: 40px;
+        line-height: 40px;
+        padding: 6px 10px;
+        margin-bottom: 12px;
+    }
+
+    /* ---- Stats Bar: 2x2 ---- */
+    .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .stat {
+        padding: 8px 10px;
+    }
+
+    .stat .label {
+        font-size: 0.55rem;
+        letter-spacing: 1px;
+    }
+
+    .stat .value {
+        font-size: 0.95rem;
+    }
+
+    /* ---- Game Wrapper ---- */
+    .game-wrapper {
+        gap: 12px;
+    }
+
+    /* ---- Board ---- */
+    .board-container {
+        padding: 8px;
+        gap: 3px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .cell {
+        width: 12vw;
+        height: 12vw;
+        max-width: 46px;
+        max-height: 46px;
+        border-radius: 6px;
+    }
+
+    .cell-number {
+        font-size: 0.6rem;
+        top: 1px;
+        right: 3px;
+        padding: 0 2px;
+    }
+
+    .segment {
+        width: 70%;
+        margin-bottom: 1px;
+    }
+
+    .segment.h1, .segment.h2, .segment.h3,
+    .segment.h4, .segment.h5, .segment.h6 {
+        height: 5px;
+    }
+
+    /* ---- Clues ---- */
+    .clue {
+        min-width: 11vw;
+        min-height: 11vw;
+        max-width: 44px;
+        max-height: 44px;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+
+    /* ---- Legend ---- */
+    .legend {
+        gap: 8px;
+        padding: 6px 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .legend-item {
+        font-size: 0.65rem;
+        gap: 4px;
+    }
+
+    .swatch {
+        width: 11px;
+        height: 11px;
+    }
+
+    /* ---- Number Pad ---- */
+    .number-pad {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(44px, 1fr));
+        gap: 6px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .num-btn {
+        width: 100%;
+        height: 48px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+    }
+
+    /* ---- Info Panels ---- */
+    .info-panels {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .info-card {
+        padding: 12px;
+    }
+
+    .info-card h3 {
+        font-size: 0.85rem;
+    }
+
+    .info-card ul, .info-card ol {
+        font-size: 0.72rem;
+        padding-left: 16px;
+    }
+
+    /* ---- Modal ---- */
+    .modal {
+        padding: 24px 18px;
+        border-radius: 18px;
+        max-width: 92%;
+    }
+
+    .win-modal {
+        padding: 28px 20px 22px 20px;
+    }
+
+    .win-icon {
+        font-size: 3rem;
+    }
+
+    .win-title {
+        font-size: 1.5rem;
+    }
+
+    .win-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 16px;
+    }
+
+    .win-stats {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .win-stat {
+        padding: 10px 6px;
+        border-radius: 10px;
+    }
+
+    .win-stat-label {
+        font-size: 0.55rem;
+        letter-spacing: 1px;
+    }
+
+    .win-stat-value {
+        font-size: 1.05rem;
+    }
+
+    .btn.large {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .modal-body ul, .modal-body ol {
+        font-size: 0.8rem;
+    }
+
+    .modal-body h3 {
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   RESPONSIVE — TINY MOBILE (< 400px)
+   ============================================ */
+@media (max-width: 400px) {
+    .cell {
+        width: 11vw;
+        height: 11vw;
+    }
+    .clue {
+        min-width: 10vw;
+        min-height: 10vw;
+    }
+    .btn {
+        font-size: 0.7rem;
+        padding: 9px 6px;
+    }
+    .num-btn {
+        height: 44px;
+        font-size: 1rem;
+    }
+}
+/* ===== Modal Overlay (shared for all modals) ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(10, 15, 30, 0.75);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    overflow: hidden;
+    padding: 20px;
+}
+.modal-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal {
+    background: linear-gradient(145deg, #1a1f35 0%, #0f172a 100%);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: 24px;
+    padding: 32px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 
+        0 30px 80px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(167, 139, 250, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-overlay.visible .modal {
+    transform: scale(1) translateY(0);
+}
+
+/* Decorative glow */
+.modal::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(167, 139, 250, 0.15), transparent 60%);
+    pointer-events: none;
+    animation: modalGlow 4s ease-in-out infinite;
+}
+
+@keyframes modalGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+/* ===== Win Modal ===== */
+.win-modal {
+    text-align: center;
+    padding: 40px 32px 32px 32px;
+}
+
+.win-icon {
+    font-size: 4rem;
+    margin-bottom: 8px;
+    animation: winBounce 0.8s ease-in-out infinite alternate;
+    display: inline-block;
+}
+
+@keyframes winBounce {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(-12px) scale(1.08); }
+}
+
+.win-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+
+.win-subtitle {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+
+.win-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+    position: relative;
+    z-index: 1;
+}
+
+.win-stat {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 14px 10px;
+    transition: all 0.25s ease;
+}
+
+.win-stat:hover {
+    background: rgba(167, 139, 250, 0.1);
+    border-color: rgba(167, 139, 250, 0.3);
+    transform: translateY(-3px);
+}
+
+.win-stat-label {
+    display: block;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.win-stat-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #60a5fa;
+}
+
+.win-actions {
+    position: relative;
+    z-index: 1;
+}
+
+.btn.large {
+    padding: 14px 32px;
+    font-size: 1rem;
+    border-radius: 14px;
+}
+
+/* ===== Modal (generic — from landing page too) ===== */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.modal-header h2 {
+    font-size: 1.3rem;
+    color: #a78bfa;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 1rem;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 700;
+}
+
+.modal-close:hover {
+    background: rgba(248, 113, 113, 0.2);
+    border-color: rgba(248, 113, 113, 0.4);
+    color: #f87171;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    position: relative;
+    z-index: 1;
+    max-height: 60vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.modal-body h3 {
+    color: #a78bfa;
+    font-size: 0.95rem;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.modal-body h3:first-child {
+    margin-top: 0;
+}
+
+.modal-body ul, .modal-body ol {
+    padding-left: 20px;
+    color: #cbd5e1;
+    font-size: 0.85rem;
+    line-height: 1.7;
+}
+
+.modal-body li {
+    margin-bottom: 6px;
+}
+
+.modal-body strong {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+/* Scrollbar styling for modal body */
+.modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+    background: rgba(167, 139, 250, 0.4);
+    border-radius: 10px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(167, 139, 250, 0.7);
+}
+/* ============================================
+   LANDING PAGE STYLES
+   ============================================ */
+.landing-container {
+    max-width: 640px;
+    text-align: center;
+}
+
+.landing-section {
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.landing-label {
+    font-size: 0.85rem;
+    color: #a78bfa;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.chip-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.chip {
+    padding: 14px 28px;
+    border-radius: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Poppins', sans-serif;
+    min-width: 100px;
+}
+
+.chip:hover {
+    background: rgba(167, 139, 250, 0.12);
+    border-color: rgba(167, 139, 250, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
+}
+
+.chip.active {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    transform: translateY(-2px);
+}
+
+.landing-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 36px;
+    flex-wrap: wrap;
+}
+
+.landing-actions .btn.large {
+    min-width: 160px;
+}
+
+.landing-footer {
+    margin-top: 40px;
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+/* Mobile adjustments for landing */
+@media (max-width: 640px) {
+    .chip {
+        padding: 12px 20px;
+        font-size: 0.85rem;
+        min-width: 80px;
+    }
+    .landing-actions .btn.large {
+        min-width: 130px;
+        padding: 12px 20px;
+        font-size: 0.9rem;
+    }
+    .landing-label {
+        font-size: 0.75rem;
+    }
+}
+/* ============================================
+   LANDING PAGE — Layout Fix
+   ============================================ */
+
+/* Center the landing container vertically */
+body:has(.landing-container) {
+    align-items: center;
+}
+/* Narrow the landing container to fit its content */
+.landing-container {
+    max-width: 500px !important;
+    padding: 40px 32px !important;
+}
+
+/* Slightly tighter spacing inside */
+.landing-container .app-header {
+    margin-bottom: 32px;
+}
+
+.landing-container .landing-section {
+    margin-bottom: 28px;
+}
+
+.landing-container .landing-actions {
+    margin-top: 32px;
+}
+
+.landing-container .landing-footer {
+    margin-top: 28px;
+}
+/* ============================================
+   LANDING PAGE — Background Image
+   ============================================ */
+
+body:has(.landing-container) {
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(30, 27, 75, 0.85) 50%, rgba(76, 29, 149, 0.88) 100%),
+        url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    position: relative;
+}
+
+body:has(.landing-container)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(167, 139, 250, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.12), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Make sure the container sits above the glow */
+body:has(.landing-container) .app-container {
+    position: relative;
+    z-index: 1;
+}
+/* ============================================
+   GAME PAGE — 3-Column Layout
+   ============================================ */
+.game-page-container {
+    max-width: 1200px !important;
+}
+
+.game-layout {
+    display: grid;
+    grid-template-columns: 240px auto 260px;
+    gap: 22px;
+    justify-content: center;
+    align-items: start;
+    margin-top: 4px;
+}
+
+/* ============================================
+   CONTROL PANEL (Left Column)
+   ============================================ */
+.controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.panel-section {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.7) 100%);
+    border: 1px solid rgba(167, 139, 250, 0.15);
+    border-radius: 16px;
+    padding: 14px 14px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.panel-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #a78bfa;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(167, 139, 250, 0.15);
+    text-align: center;
+}
+
+/* ---- Panel Buttons ---- */
+.panel-btn {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 0.82rem;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+    white-space: nowrap;
+}
+
+.panel-btn:hover {
+    background: rgba(167, 139, 250, 0.15);
+    border-color: rgba(167, 139, 250, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.2);
+}
+
+.panel-btn:active {
+    transform: translateY(0);
+}
+
+.panel-btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+}
+
+.panel-btn.primary:hover {
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.6);
+    transform: translateY(-2px);
+}
+
+/* ---- Stat Rows ---- */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.stat-value {
+    font-size: 0.82rem;
+    color: #60a5fa;
+    font-weight: 700;
+    font-family: 'Poppins', monospace;
+}
+
+/* ============================================
+   CENTER: Board Column
+   ============================================ */
+.board-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+/* ============================================
+   RIGHT: Info Side
+   ============================================ */
+.info-side .info-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 16px 18px;
+}
+
+.info-side .info-card h3 {
+    font-size: 0.9rem;
+    color: #a78bfa;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.info-side .info-card ul {
+    padding-left: 18px;
+    color: #cbd5e1;
+    font-size: 0.78rem;
+    line-height: 1.7;
+}
+
+.info-side .info-card li {
+    margin-bottom: 6px;
+}
+
+.info-side .info-card strong {
+    color: #60a5fa;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1100px) {
+    .game-layout {
+        grid-template-columns: 220px auto 220px;
+        gap: 16px;
+    }
+    .panel-btn {
+        font-size: 0.78rem;
+        padding: 10px 10px;
+    }
+}
+
+@media (max-width: 900px) {
+    .game-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .controls-panel {
+        flex-direction: column;
+        max-width: 400px;
+        margin: 0 auto;
+        width: 100%;
+    }
+    .panel-btn {
+        font-size: 0.85rem;
+        padding: 12px 16px;
+    }
+}
+/* ============================================
+   GAME PAGE — Background Image
+   ============================================ */
+
+body:has(.game-page-container) {
+    background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 27, 75, 0.90) 50%, rgba(76, 29, 149, 0.92) 100%),
+        url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+    align-items: flex-start;
+}
+
+body:has(.game-page-container)::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, rgba(167, 139, 250, 0.12), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.10), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body:has(.game-page-container) .app-container {
+    position: relative;
+    z-index: 1;
 }
