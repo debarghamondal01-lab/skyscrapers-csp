@@ -85,15 +85,11 @@ def count_solutions(n, clues, limit=2):
 
     backtrack(assignment, domains)
     return solutions
-def generate_puzzle(n=4, difficulty="medium"):
+def generate_puzzle(n=4, difficulty="medium", max_attempts=5):
     """
-    Generate a Skyscrapers puzzle with a unique solution.
-    Removes clues one at a time and verifies uniqueness after each removal.
+    Generate a Skyscrapers puzzle. Always verifies solvability before returning.
+    Falls back to a fully-clued puzzle if all attempts fail.
     """
-    solution = _generate_latin_square(n)
-    clues = compute_clues(solution)
-
-    # How many clues to remove per grid size and difficulty
     targets = {
         4: {"easy": 0,  "medium": 8,  "hard": 12},
         5: {"easy": 0,  "medium": 4,  "hard": 6},
@@ -101,34 +97,40 @@ def generate_puzzle(n=4, difficulty="medium"):
     }
     target = targets.get(n, {4: 8, 5: 4, 6: 2})[difficulty]
 
-    if target == 0:
-        return clues, solution
+    for attempt in range(max_attempts):
+        solution = _generate_latin_square(n)
+        clues = compute_clues(solution)
 
-    all_positions = [(side, i) for side in ['top', 'bottom', 'left', 'right'] for i in range(n)]
-    random.shuffle(all_positions)
+        if target > 0:
+            all_positions = [(side, i) for side in ['top', 'bottom', 'left', 'right'] for i in range(n)]
+            random.shuffle(all_positions)
+            removed = 0
+            for side, i in all_positions:
+                if removed >= target:
+                    break
+                original = clues[side][i]
+                if original == 0:
+                    continue
+                clues[side][i] = 0
 
-    removed = 0
-    for side, i in all_positions:
-        if removed >= target:
-            break
-        original = clues[side][i]
-        if original == 0:
-            continue
-        clues[side][i] = 0
+                if n <= 5:
+                    if len(count_solutions(n, clues, limit=2)) == 1:
+                        removed += 1
+                    else:
+                        clues[side][i] = original
+                else:
+                    removed += 1
 
-        # For 4x4 and 5x5, verify uniqueness after each removal
-        # For 6x6, skip the slow check but only remove very few clues
-        if n <= 5:
-            if len(count_solutions(n, clues, limit=2)) == 1:
-                removed += 1
-            else:
-                clues[side][i] = original
-        else:
-            removed += 1
+        # FINAL VERIFICATION: Guarantee the puzzle is solvable
+        test_solver = SkyscrapersCSP(n, clues)
+        test_solution = test_solver.solve()
+        if test_solution is not None:
+            return clues, solution
 
+    # Fallback: return a fully-clued puzzle (guaranteed solvable)
+    solution = _generate_latin_square(n)
+    clues = compute_clues(solution)
     return clues, solution
-
-    return last_puzzle
 if __name__ == "__main__":
     import time
 
