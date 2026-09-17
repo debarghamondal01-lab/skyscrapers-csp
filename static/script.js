@@ -1,4 +1,4 @@
-// script.js — Robust Version
+// script.js — Skyscrapers Game Logic
 console.log('✅ script.js loaded');
 
 const API_URL = window.location.origin;
@@ -23,9 +23,9 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function attachEventListeners() {
-    // Use direct ID lookup with error checking
+    // Button click handlers
     const buttons = {
-        'newGame': newGame,
+        'homeBtn': () => window.location.href = '/',
         'hintBtn': getHint,
         'solveBtn': () => solveBoard(false),
         'solveAC3Btn': () => solveBoard(true),
@@ -42,21 +42,47 @@ function attachEventListeners() {
         }
     }
 
-    // Keyboard support
+        // Keyboard support
     document.addEventListener('keydown', (e) => {
         if (!selectedCell) return;
+
         if (e.key >= '1' && e.key <= '9') {
             const num = parseInt(e.key);
             if (num <= gridSize) placeNumber(selectedCell.row, selectedCell.col, num);
-        } else if (e.key === 'Backspace' || e.key === 'Delete') {
+        }
+        else if (e.key === 'Backspace' || e.key === 'Delete') {
             placeNumber(selectedCell.row, selectedCell.col, 0);
         }
+        else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            moveSelection(-1, 0);
+        }
+        else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            moveSelection(1, 0);
+        }
+        else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            moveSelection(0, -1);
+        }
+        else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            moveSelection(0, 1);
+        }
     });
+
+    // Win modal "Back to Home" button
+    const winNewGameBtn = document.getElementById('winNewGame');
+    if (winNewGameBtn) {
+        winNewGameBtn.addEventListener('click', () => {
+            window.location.href = '/';
+        });
+    }
 }
 
 // ===== New Game =====
 async function newGame() {
-    console.log('🎮 New Game clicked');
+    console.log('🎮 New Game started');
     showMessage('Generating puzzle...');
     resetTimer();
     mistakes = 0;
@@ -64,10 +90,10 @@ async function newGame() {
     document.getElementById('algoUsed').textContent = '—';
     document.getElementById('nodesExplored').textContent = '—';
 
-    const gridSizeEl = document.getElementById('gridSize');
-    const difficultyEl = document.getElementById('difficulty');
-    gridSize = parseInt(gridSizeEl.value);
-    const difficulty = difficultyEl.value;
+    // Read grid size and difficulty from URL params (set by landing page)
+    const urlParams = new URLSearchParams(window.location.search);
+    gridSize = parseInt(urlParams.get('n')) || 4;
+    const difficulty = urlParams.get('difficulty') || 'medium';
     console.log(`  Grid: ${gridSize}x${gridSize}, Difficulty: ${difficulty}`);
 
     try {
@@ -139,7 +165,6 @@ function renderBoard() {
             cell.className = 'cell';
             cell.dataset.row = r;
             cell.dataset.col = c;
-            // Use event delegation via dataset
             cell.addEventListener('click', () => selectCell(r, c));
             container.appendChild(cell);
         }
@@ -196,8 +221,10 @@ function renderCells() {
         cell.classList.remove('selected', 'hint', 'error', 'solved');
     });
 }
+
 function renderLegend() {
     const legend = document.getElementById('legend');
+    if (!legend) return;
     legend.innerHTML = '';
     const colors = ['#22c55e', '#3b82f6', '#8b5cf6', '#f43f5e', '#f59e0b', '#d946ef'];
     for (let i = 0; i < gridSize; i++) {
@@ -207,8 +234,10 @@ function renderLegend() {
         legend.appendChild(item);
     }
 }
+
 function renderNumberPad() {
     const pad = document.getElementById('numberPad');
+    if (!pad) return;
     pad.innerHTML = '';
     for (let i = 1; i <= gridSize; i++) {
         const btn = document.createElement('button');
@@ -236,7 +265,16 @@ function selectCell(r, c) {
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
     if (cell) cell.classList.add('selected');
 }
-
+function moveSelection(dr, dc) {
+    if (!selectedCell) return;
+    const newR = selectedCell.row + dr;
+    const newC = selectedCell.col + dc;
+    if (newR < 0 || newR >= gridSize || newC < 0 || newC >= gridSize) return;
+    document.querySelectorAll('.cell').forEach(cell => cell.classList.remove('selected'));
+    selectedCell = { row: newR, col: newC };
+    const cell = document.querySelector(`.cell[data-row="${newR}"][data-col="${newC}"]`);
+    if (cell) cell.classList.add('selected');
+}
 function placeNumber(r, c, num) {
     if (fixedCells.has(`${r},${c}`)) return;
     currentBoard[r][c] = num;
@@ -244,16 +282,31 @@ function placeNumber(r, c, num) {
     const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
     if (cell) cell.classList.add('selected');
 
-    if (num !== 0 && currentSolution && currentSolution[r][c] !== num) {
+    // Check for constraint violations (duplicates in row/column)
+    const hasDuplicate = checkDuplicates(r, c, num);
+
+    if (num !== 0 && hasDuplicate) {
         if (cell) cell.classList.add('error');
         mistakes++;
         document.getElementById('mistakes').textContent = mistakes;
     } else if (num !== 0) {
         if (isBoardComplete()) {
-            stopTimer();
-            showMessage(`🎉 Solved in ${formatTime(seconds)} with ${mistakes} mistakes!`, 'success');
+            validateBoard(true);  // Auto-check when board is filled
         }
     }
+}
+
+function checkDuplicates(r, c, num) {
+    if (num === 0) return false;
+    // Check row
+    for (let i = 0; i < gridSize; i++) {
+        if (i !== c && currentBoard[r][i] === num) return true;
+    }
+    // Check column
+    for (let i = 0; i < gridSize; i++) {
+        if (i !== r && currentBoard[i][c] === num) return true;
+    }
+    return false;
 }
 
 function isBoardComplete() {
@@ -293,7 +346,9 @@ function getHint() {
         }
     }
     showMessage('✅ Board is already complete!', 'success');
-}// ===== Solve =====
+}
+
+// ===== Solve =====
 async function solveBoard(useAC3) {
     console.log(`🤖 Solve clicked, AC-3: ${useAC3}`);
     showMessage(useAC3 ? 'Solving with AC-3...' : 'Solving with Backtracking + FC + MRV...');
@@ -331,9 +386,9 @@ async function solveBoard(useAC3) {
 }
 
 // ===== Validate =====
-async function validateBoard() {
+async function validateBoard(autoTriggered = false) {
     console.log('✓ Validate clicked');
-    showMessage('Validating...');
+    if (!autoTriggered) showMessage('Validating...');
     try {
         const res = await fetch(`${API_URL}/validate`, {
             method: 'POST',
@@ -343,12 +398,18 @@ async function validateBoard() {
         const data = await res.json();
         console.log('  Validate response:', data);
 
-        if (data.solved) showMessage('✅ Perfect! The puzzle is correctly solved!', 'success');
-        else if (data.completed && !data.valid) showMessage('❌ Board is complete but has conflicts.', 'error');
-        else if (data.valid) showMessage('✓ No conflicts so far. Keep going!');
-        else {
+        if (data.solved) {
+            stopTimer();
+            showMessage('🎉 Perfect! The puzzle is correctly solved!', 'success');
+            showWinPopup();
+        } else if (data.completed && !data.valid) {
+            showMessage('❌ Board is complete but has duplicate conflicts.', 'error');
+        } else if (data.completed && data.valid && !data.solved) {
+            showMessage('⚠️ Board is complete but the edge clues are not satisfied. Recheck your solution.', 'error');
+        } else if (data.valid) {
+            showMessage('✓ No conflicts so far. Keep going!');
+        } else {
             showMessage(`❌ Conflicts at ${data.conflicts.length} cell(s). Fix the red cells.`, 'error');
-            // Highlight conflicting cells
             data.conflicts.forEach(([r, c]) => {
                 const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
                 if (cell) cell.classList.add('error');
@@ -359,6 +420,7 @@ async function validateBoard() {
         showMessage('Error validating.', 'error');
     }
 }
+
 // ===== Timer =====
 function startTimer() {
     stopTimer();
@@ -376,6 +438,18 @@ function formatTime(s) {
     const sec = (s % 60).toString().padStart(2, '0');
     return `${m}:${sec}`;
 }
+
+// ===== Win Popup =====
+function showWinPopup() {
+    document.getElementById('winTime').textContent = formatTime(seconds);
+    document.getElementById('winMistakes').textContent = mistakes;
+    document.getElementById('winGrid').textContent = `${gridSize}×${gridSize}`;
+    setTimeout(() => {
+        document.getElementById('winModal').classList.add('visible');
+    }, 400);
+}
+
+// ===== Message =====
 function showMessage(msg, type = '') {
     const el = document.getElementById('message');
     el.textContent = msg;
